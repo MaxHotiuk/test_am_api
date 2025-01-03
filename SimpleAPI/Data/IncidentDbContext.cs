@@ -15,13 +15,16 @@ public class IncidentDbContext(DbContextOptions<IncidentDbContext> options) : Db
         modelBuilder.Entity<Contact>()
             .HasOne(c => c.Account)
             .WithMany(a => a.Contacts)
-            .HasForeignKey(c => c.AccountName);
+            .HasForeignKey(c => c.AccountName)
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.SetNull);
 
-        modelBuilder.Entity<Incident>()
-            .HasOne(i => i.Account)
-            .WithMany(a => a.Incidents)
-            .HasForeignKey(i => i.AccountName)
-            .IsRequired(false); 
+        modelBuilder.Entity<Account>()
+            .HasOne(a => a.Incident)
+            .WithMany(i => i.Accounts)
+            .HasForeignKey(a => a.IncidentName)
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.SetNull);
 
         modelBuilder.Entity<Account>()
             .HasIndex(a => a.Name)

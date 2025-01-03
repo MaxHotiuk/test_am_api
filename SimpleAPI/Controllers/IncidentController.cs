@@ -43,13 +43,14 @@ public class IncidentController(IncidentDbContext context) : ControllerBase
 
         var newIncident = new Incident
         {
-            Account = existingAccount,
             Description = incident.Description
         };
+
+        existingAccount.Incident = newIncident;
 
         _context.Incidents.Add(newIncident);
         await _context.SaveChangesAsync();
 
-        return Ok(newIncident);
+        return Ok($"Incident created successfully with name {newIncident.IncidentName}");
     }
 }

@@ -35,6 +35,6 @@ public class AccountController(IncidentDbContext context) : ControllerBase
         _context.Accounts.Add(newAccount);
         await _context.SaveChangesAsync();
 
-        return Ok(newAccount);
+        return Ok("Account created successfully");
     }
 }

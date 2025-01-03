@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SimpleAPI.Data;
 
@@ -10,9 +11,11 @@ using SimpleAPI.Data;
 namespace SimpleAPI.Migrations
 {
     [DbContext(typeof(IncidentDbContext))]
-    partial class IncidentDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250103205615_UpdateAccountIncident")]
+    partial class UpdateAccountIncident
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

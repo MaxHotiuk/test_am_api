@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace SimpleAPI.Models;
 
@@ -11,6 +12,13 @@ public class Account
     [StringLength(200)]
     public string Name { get; set; } = null!;
 
-    public ICollection<Incident> Incidents { get; set; } = new List<Incident>();
-    public ICollection<Contact> Contacts { get; set; } = new List<Contact>();
+    [Column("IncidentName")]
+    [StringLength(255)]
+    public string? IncidentName { get; set; } = null!;
+
+    [JsonIgnore]
+    [ForeignKey("IncidentName")]
+    public Incident? Incident { get; set; }
+
+    public ICollection<Contact> Contacts { get; set; } = [];
 }

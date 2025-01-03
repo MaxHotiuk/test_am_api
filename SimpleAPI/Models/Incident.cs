@@ -16,11 +16,6 @@ public class Incident
     [Column("Description")]
     public string Description { get; set; } = null!;
 
-    [Required]
-    [StringLength(200)]
-    public string AccountName { get; set; } = null!;
-
     [JsonIgnore]
-    [ForeignKey("AccountName")]
-    public Account Account { get; set; } = null!;
+    public ICollection<Account> Accounts { get; set; } = [];
 }

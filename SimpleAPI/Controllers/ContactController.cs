@@ -32,6 +32,6 @@ public class ContactController(IncidentDbContext context) : ControllerBase
         _context.Contacts.Add(newContact);
         await _context.SaveChangesAsync();
 
-        return Ok(newContact);
+        return Ok("Contact created successfully");
     }
 }

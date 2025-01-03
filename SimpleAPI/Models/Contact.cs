@@ -27,5 +27,10 @@ public class Contact
     [StringLength(200)]
     public string Email { get; set; } = null!;
 
-    public ICollection<Account> Accounts { get; set; } = new List<Account>();
+    [Column("AccountName")]
+    [StringLength(200)]
+    public string? AccountName { get; set; } = null!;
+
+    [ForeignKey("AccountName")]
+    public Account Account { get; set; } = null!;
 }

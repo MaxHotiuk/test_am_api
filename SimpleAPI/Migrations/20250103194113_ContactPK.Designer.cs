@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SimpleAPI.Data;
 
@@ -10,9 +11,11 @@ using SimpleAPI.Data;
 namespace SimpleAPI.Migrations
 {
     [DbContext(typeof(IncidentDbContext))]
-    partial class IncidentDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250103194113_ContactPK")]
+    partial class ContactPK
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -28,7 +31,14 @@ namespace SimpleAPI.Migrations
                         .HasColumnType("nvarchar(200)")
                         .HasColumnName("Name");
 
+                    b.Property<string>("ContactEmail")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
                     b.HasKey("Name");
+
+                    b.HasIndex("ContactEmail");
 
                     b.HasIndex("Name")
                         .IsUnique();
@@ -38,20 +48,7 @@ namespace SimpleAPI.Migrations
 
             modelBuilder.Entity("SimpleAPI.Models.Contact", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("Id");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("AccountName")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)")
-                        .HasColumnName("AccountName");
-
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)")
                         .HasColumnName("Email");
@@ -68,9 +65,7 @@ namespace SimpleAPI.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("LastName");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("AccountName");
+                    b.HasKey("Email");
 
                     b.HasIndex("Email")
                         .IsUnique();
@@ -103,29 +98,36 @@ namespace SimpleAPI.Migrations
                     b.ToTable("Incidents");
                 });
 
-            modelBuilder.Entity("SimpleAPI.Models.Contact", b =>
+            modelBuilder.Entity("SimpleAPI.Models.Account", b =>
                 {
-                    b.HasOne("SimpleAPI.Models.Account", "Account")
-                        .WithMany("Contacts")
-                        .HasForeignKey("AccountName");
+                    b.HasOne("SimpleAPI.Models.Contact", "Contact")
+                        .WithMany("Accounts")
+                        .HasForeignKey("ContactEmail")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("Account");
+                    b.Navigation("Contact");
                 });
 
             modelBuilder.Entity("SimpleAPI.Models.Incident", b =>
                 {
                     b.HasOne("SimpleAPI.Models.Account", "Account")
                         .WithMany("Incidents")
-                        .HasForeignKey("AccountName");
+                        .HasForeignKey("AccountName")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Account");
                 });
 
             modelBuilder.Entity("SimpleAPI.Models.Account", b =>
                 {
-                    b.Navigation("Contacts");
-
                     b.Navigation("Incidents");
+                });
+
+            modelBuilder.Entity("SimpleAPI.Models.Contact", b =>
+                {
+                    b.Navigation("Accounts");
                 });
 #pragma warning restore 612, 618
         }

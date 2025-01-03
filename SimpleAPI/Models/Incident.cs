@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace SimpleAPI.Models;
 
@@ -19,6 +20,7 @@ public class Incident
     [StringLength(200)]
     public string AccountName { get; set; } = null!;
 
+    [JsonIgnore]
     [ForeignKey("AccountName")]
     public Account Account { get; set; } = null!;
 }

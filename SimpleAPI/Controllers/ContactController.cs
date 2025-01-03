@@ -2,37 +2,36 @@ using Microsoft.AspNetCore.Mvc;
 using SimpleAPI.Models;
 using SimpleAPI.Data;
 using Microsoft.EntityFrameworkCore;
+using SimpleAPI.DTOs;
 
 namespace SimpleAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ContactController : ControllerBase
+public class ContactController(IncidentDbContext context) : ControllerBase
 {
-    private readonly IncidentDbContext _context;
-
-    public ContactController(IncidentDbContext context)
-    {
-        _context = context;
-    }
+    private readonly IncidentDbContext _context = context;
 
     [HttpPost("create")]
-    public async Task<IActionResult> CreateContact([FromBody] Contact contact)
+    public async Task<IActionResult> CreateContact([FromBody] ContactDto contact)
     {
-        if (string.IsNullOrEmpty(contact.Email))
+        var newContact = new Contact
         {
-            return BadRequest("Contact email is required.");
-        }
+            Email = contact.Email,
+            FirstName = contact.FirstName,
+            LastName = contact.LastName,
+            AccountName = contact.AccountName
+        };
 
-        var existingContact = await _context.Contacts.FirstOrDefaultAsync(c => c.Email == contact.Email);
+        var existingContact = await _context.Contacts.FirstOrDefaultAsync(c => c.Email == newContact.Email);
         if (existingContact != null)
         {
-            return Conflict("Contact already exists.");
+            return BadRequest("Email already in use");
         }
 
-        await _context.Contacts.AddAsync(contact);
+        _context.Contacts.Add(newContact);
         await _context.SaveChangesAsync();
 
-        return Ok(new { message = "Contact created successfully." });
+        return Ok(newContact);
     }
 }

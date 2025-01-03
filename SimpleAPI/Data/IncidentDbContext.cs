@@ -12,16 +12,19 @@ public class IncidentDbContext(DbContextOptions<IncidentDbContext> options) : Db
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Account>(entity =>
-        {
-            entity.Property(e => e.Name)
-                .IsRequired();
+        modelBuilder.Entity<Account>()
+            .HasOne(a => a.Contact)
+            .WithMany(c => c.Accounts)
+            .HasForeignKey(a => a.ContactId);
 
-            entity.HasOne(d => d.Incident)
-                .WithMany(p => p.Accounts)
-                .HasForeignKey(d => d.IncidentName)
-                .OnDelete(DeleteBehavior.Restrict);
-        });
+        modelBuilder.Entity<Account>()
+            .HasIndex(a => a.Name)
+            .IsUnique();
+
+        modelBuilder.Entity<Incident>()
+            .HasOne(i => i.Account)
+            .WithMany(a => a.Incidents)
+            .HasForeignKey(i => i.AccountName);
 
         modelBuilder.Entity<Incident>(entity =>
         {

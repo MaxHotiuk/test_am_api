@@ -15,5 +15,10 @@ public class Incident
     [Column("Description")]
     public string Description { get; set; } = null!;
 
-    public ICollection<Account> Accounts { get; set; } = new List<Account>();
+    [Required]
+    [StringLength(200)]
+    public string AccountName { get; set; } = null!;
+
+    [ForeignKey("AccountName")]
+    public Account Account { get; set; } = null!;
 }

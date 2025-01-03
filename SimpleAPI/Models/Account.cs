@@ -12,11 +12,10 @@ public class Account
     public string Name { get; set; } = null!;
 
     [Required]
-    [Column("IncidentName")]
-    [ForeignKey("Incident")]
-    [StringLength(255)]
-    public string IncidentName { get; set; } = null!;
+    public int ContactId { get; set; }
 
-    public ICollection<Contact> Contacts { get; set; } = new List<Contact>();
-    public Incident Incident { get; set; } = null!;
+    [ForeignKey("ContactId")]
+    public Contact Contact { get; set; } = null!;
+
+    public ICollection<Incident> Incidents { get; set; } = new List<Incident>();
 }
